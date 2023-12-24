@@ -1,9 +1,9 @@
 import Web3, { Contract, ContractAbi } from "web3";
 
-export interface OutletContext {
+export interface GalleryLayoutContext {
     account: string;
     web3: Web3;
-    mintNftContract: Contract<ContractAbi>;
+    NFTContract: Contract<ContractAbi>;
 }
 
 export interface NftMetadata {
