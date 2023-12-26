@@ -45,7 +45,8 @@ const Header = ({account, setAccount}: HeaderProps) => {
                         {account.substring(0, 7)}...
                         {account.substring(account.length - 5)}
                     </span>
-                </div>
+                    <button onClick={ ()=>setAccount("")}>Logout</button>
+                </div>                
             ) : (
                 <button onClick={connectMetaMask}>Connect MetaMask</button>
             )}              

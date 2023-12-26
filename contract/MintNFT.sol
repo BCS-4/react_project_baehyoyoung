@@ -27,6 +27,7 @@ contract MintNFT is ERC721Enumerable {
         string memory _metadataURI) ERC721( _name, _symbol) {
             maxSupply = _maxSupply;
             metadataURI = _metadataURI;
+            //https://ipfs.io/ipfs/QmepCkKeWM9v4MqFP9ymi2moQ22c4ineZbn6wZMX2k9wrE
 
     }
 

@@ -5,9 +5,13 @@ import {Outlet} from 'react-router-dom';  // Route 중첩 시, 자식 route의 �
 import Header from './Header';
 import Footer from './Footer';
 
-import mintNftAbi from '../abis/mintNftAbi.json';
 import Web3, { Contract, ContractAbi } from 'web3';
 import { useSDK } from "@metamask/sdk-react";
+
+import mintNftAbi from '../abis/mintNftAbi.json';
+import saleNftAbi from '../abis/saleNftAbi.json';
+
+import { MINT_NFT_CONTRACT, SALE_NFT_CONTRACT } from '../abis/contractAddress';
 
 // FC: Function Component. 함수형 컴포넌트 정의에 사용
 // TypeScript를 사용할 때 FC는 component가 받을 props의 타입을 지정하는데 유용하다
@@ -24,6 +28,8 @@ const GalleryLayout:FC = () => {
     // 좀 더 원시적인 접근을 구현해야 Metamask가 어떤 작업을 대신해주는지 정확히 알 수 있을 듯
     const [web3, setWeb3] = useState<Web3>();
     const [NFTContract, setNFTContract] = useState<Contract<ContractAbi>>();
+    const [NFTBoutique, setBoutiqueContract] = useState<Contract<ContractAbi>>();
+    
 
     // 브라우저에 MetaMask가 설치되어 있지 않다면, useSDK는 undefined 반환
     // Ethereum Provider: Ethereum blockchain과 상호작용하기 위한 interface 또는 연결 매커니즘
@@ -43,12 +49,9 @@ const GalleryLayout:FC = () => {
     useEffect( () => {
         if(!web3) return;
 
-        setNFTContract(
-            //모던아트 주소 확인할 것
-            new web3.eth.Contract(mintNftAbi, "0x141588e0D3f6080ABAed68f35DfF9F6F16Cc704e")            
-            // 0xf876ca8e66C3E32D5B7e336018C574B918722bAE
-            // 0x67b95748A32d0EE47AeF7D47A1EE401192993b6e
-        );
+        setNFTContract( new web3.eth.Contract(mintNftAbi, MINT_NFT_CONTRACT));
+        setBoutiqueContract( new web3.eth.Contract(saleNftAbi, SALE_NFT_CONTRACT));
+        
         console.log("set web3:", web3)
 
     }, [web3]);
@@ -66,7 +69,7 @@ const GalleryLayout:FC = () => {
     return (
         <div>
             <Header account={account} setAccount={setAccount}/>
-            <Outlet context={ { account, web3, NFTContract } }/>
+            <Outlet context={ { account, web3, NFTContract, NFTBoutique } }/>
             <Footer />
         </div>
 
@@ -75,4 +78,5 @@ const GalleryLayout:FC = () => {
 
 
 export default GalleryLayout;
+
 

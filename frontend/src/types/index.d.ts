@@ -4,10 +4,12 @@ export interface GalleryLayoutContext {
     account: string;
     web3: Web3;
     NFTContract: Contract<ContractAbi>;
+    BoutiqueContract: Contract<ContractAbi>;
 }
 
 export interface NftMetadata {
-    name: string,
+    tokenId?: number;
+    name: string;
     image: string;
     description: string,
     attributes: {
