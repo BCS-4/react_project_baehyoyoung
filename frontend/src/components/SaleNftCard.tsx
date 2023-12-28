@@ -21,7 +21,7 @@ const SaleNftCard = ({
 
     const [registedPrice, setRegistedPrice] = useState<number>(0);
 
-    const { NFTContract, BoutiqueContract, account, web3} = useOutletContext<GalleryLayoutContext>();
+    const { NFTContract, SALEContract, account, web3} = useOutletContext<GalleryLayoutContext>();
 
     const onClickPurchase = async() => {
         try {
@@ -31,7 +31,7 @@ const SaleNftCard = ({
             if(!account || nftOwner.toLowerCase() === account.toLowerCase()) return;
 
             // @ts-expect-error
-            await BoutiqueContract.methods.purchaseNFT(MINT_NFT_CONTRACT, tokenId).send({
+            await SALEContract.methods.purchaseNFT(MINT_NFT_CONTRACT, tokenId).send({
                 from: account,
                 value: web3.utils.toWei(registedPrice, "ether"),
                 });
@@ -57,7 +57,7 @@ const SaleNftCard = ({
     const getRegistedPrice = async() => {
         try {
             // @ts-expect-error
-            const response = await BoutiqueContract.methods.getNFTSaleData(tokenId).call();
+            const response = await SALEContract.methods.getNFTSaleData(tokenId).call();
             // @ts-expect-error
             const price = Number(web3.utils.fromWei(Number(response.price), "ether"));
             setRegistedPrice(price);            
@@ -69,11 +69,11 @@ const SaleNftCard = ({
     };
 
     useEffect( ()=> {
-        if(!BoutiqueContract) return;
+        if(SALEContract) {
+            getRegistedPrice();
+        };       
 
-        getRegistedPrice();
-
-    }, [BoutiqueContract]);
+    }, [SALEContract]);
 
     return (
         <div>

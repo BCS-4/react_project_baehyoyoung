@@ -11,7 +11,7 @@ const Store = () => {
   const [metadataArray, setMetadataArray] = useState<NftMetadata[]>([]);
   //NftMetadata[]의 초기값은 빈 배열임을 ([])로 정의
 
-  const {NFTContract, BoutiqueContract } = useOutletContext<GalleryLayoutContext>();
+  const {NFTContract, SALEContract } = useOutletContext<GalleryLayoutContext>();
   // useOutletContext() 함수를 호출하고, 반환하는 값의 타입은 GalleryLayoutContext이다. 
   // 이는 NFTContract와 BoutiqueContract를 반환하고, 이는 GalleryLayoutContext에 정의되어 있을 것이다.
 
@@ -20,7 +20,7 @@ const Store = () => {
       // Solidity의 uint형 array를 받아와야함. 
       // 보통 uint는 JavaScript의 number타입(64비트 부동소수점 형식)보다 큰 수를 다룸
       // 따라서 자바스크립트에서 크기 제한 없는 bigint를 사용하여 uint 값을 받아오는 것이 정확한 데이터 처리
-      const onSaleNFTs:bigint[] = await BoutiqueContract.methods.getOnSaleNFTs().call();
+      const onSaleNFTs:bigint[] = await SALEContract.methods.getOnSaleNFTs().call();
 
       let temp: NftMetadata[] = [];
 
@@ -59,12 +59,12 @@ const Store = () => {
   };
 
   useEffect( () => {
-    if(!BoutiqueContract) return;
+    if(!SALEContract) return;
 
     //BoutiqueContract 정보가 있다면 Boutique에 등록된 NFT 정보 가져오기
     getBoutiqueNFTs();
 
-  }, [BoutiqueContract]);
+  }, [SALEContract]);
 
   return (
       <div>

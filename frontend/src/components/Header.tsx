@@ -1,7 +1,8 @@
 import React, {Dispatch, SetStateAction} from 'react';
 import { Link } from 'react-router-dom';
 
-import { useSDK } from '@metamask/sdk-react';
+// import { useSDK } from '@metamask/sdk-react';
+declare let ethereum: any;
 
 
 // interface: a way to define the shape of an object or a contract
@@ -19,11 +20,12 @@ interface HeaderProps {
 const Header = ({account, setAccount}: HeaderProps) => {
     // receive state and its updater function from a parent component
 
-    const { sdk } = useSDK();
+    // const { sdk } = useSDK();
 
     const connectMetaMask = async() => {
         try {
-            const accounts: any = await sdk?.connect();
+            // const accounts: any = await sdk?.connect();
+            const accounts: any = await ethereum.request({method: 'eth_accounts'});
             // sdk가 null인 경우, await sdk?.connect()는 undefined를 반환하여 accounts는 undefined로 설정
             setAccount(accounts[0]);
             // accounts가 undefined인 경우, accounts[0]의 접근 로직에서 error가 발생하고 catch 구문으로 넘어감

@@ -24,9 +24,9 @@ const Artandartists = () => {
   const { NFTContract, account } = useOutletContext<GalleryLayoutContext>();  
 
   const onClickMintModal = () => {
-    if( !account ) return;
-
-    setIsOpen(true);
+    if( account ) {
+      setIsOpen(true);
+    }
   }
 
   const onClickSaleStatus = async () => {
@@ -61,8 +61,6 @@ const Artandartists = () => {
       //@ts-expect-error
       const balance = await NFTContract.methods.balanceOf(account).call();  // NFT 개수 확인
 
-      console.log("balance: ", Number(balance));
-
       // NFT 정보를 받아올 배열 선언
       let tempNFTs: NftMetadata[] = [];
 
@@ -72,12 +70,9 @@ const Artandartists = () => {
 
         //@ts-expect-error
         const metadataURI: string = await NFTContract.methods.tokenURI(Number(tokenId)).call();
-
-        console.log("URI:", metadataURI);
-
         const response = await axios.get(metadataURI);
-        console.log(response);
-        tempNFTs.push(response.data);
+
+        tempNFTs.push({tokenId: Number(tokenId), ...response.data});
       }
       
       setNftCollection(tempNFTs);
@@ -97,16 +92,16 @@ const Artandartists = () => {
   };
 
   useEffect( () => {
-    //OutletContext를 통해 NFT contract의 web3 연결과 metamask연결 정보가 들어왔으면 contract의 NFT 상세 정보 받아오기
-    getNFTs();
-    console.log("NFTContract: ", NFTContract);
+    if(NFTContract && account){
+      //OutletContext를 통해 NFT contract의 web3 연결과 metamask연결 정보가 들어왔으면 contract의 NFT 상세 정보 받아오기
+      getNFTs();
+    }    
   }, [NFTContract, account]);
 
   useEffect( () => {
-    if (!account) return;
-
-    getSaleStatus();
-
+    if (account) {
+      getSaleStatus();
+    }    
   }, [account]);
 
   return (
@@ -130,7 +125,7 @@ const Artandartists = () => {
               key={index}
               image={formatImageURL(nft.image)}
               name={nft.name}
-              tokenId={nft.tokenId!}
+              tokenId={nft.tokenId}
               saleStatus={saleStatus}
             />
           ))}

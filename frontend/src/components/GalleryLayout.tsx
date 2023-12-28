@@ -6,7 +6,7 @@ import Header from './Header';
 import Footer from './Footer';
 
 import Web3, { Contract, ContractAbi } from 'web3';
-import { useSDK } from "@metamask/sdk-react";
+// import { useSDK } from "@metamask/sdk-react";
 
 import mintNftAbi from '../abis/mintNftAbi.json';
 import saleNftAbi from '../abis/saleNftAbi.json';
@@ -17,7 +17,7 @@ import { MINT_NFT_CONTRACT, SALE_NFT_CONTRACT } from '../abis/contractAddress';
 // TypeScript를 사용할 때 FC는 component가 받을 props의 타입을 지정하는데 유용하다
 // GalleryLayout에서는 FC를 사용하지 않아도 큰 문제는 없을 것 같지만,
 // TypeScript로 코딩 중이니 FC 선언
-const GalleryLayout:FC = () => {
+const GalleryLayout = () => {
 
     // React Hooks(introduced in React 16.8)
     // useState: component가 rendering 될 때, 동일한 상태값을 유지할 수 있도록 한다
@@ -28,7 +28,7 @@ const GalleryLayout:FC = () => {
     // 좀 더 원시적인 접근을 구현해야 Metamask가 어떤 작업을 대신해주는지 정확히 알 수 있을 듯
     const [web3, setWeb3] = useState<Web3>();
     const [NFTContract, setNFTContract] = useState<Contract<ContractAbi>>();
-    const [NFTBoutique, setBoutiqueContract] = useState<Contract<ContractAbi>>();
+    const [SALEContract, setSALEContract] = useState<Contract<ContractAbi>>();
     
 
     // 브라우저에 MetaMask가 설치되어 있지 않다면, useSDK는 undefined 반환
@@ -36,24 +36,45 @@ const GalleryLayout:FC = () => {
     // - 정의: 일반적으로 웹 어플리케이션과 Ethereum blockchain 간의 통신을 가능하게 하는 소프트웨어 구성요소
     // - 역할: 블록체인 상의 데이터를 읽거나, 트랜잭션을 보내는 등의 작업을 할 때 필요한 모든 네트워크 통신을 처리
     // - 종류: HTTP provider(Infura or Alchemy), WebSocket provider, Web3 provider(Metamask)
-    const { provider } = useSDK();
+    
+    //const { provider } = useSDK();
 
+    const connectMetamask = async () => {
+        if (window.ethereum) {
+            try {
+                const accounts = await window.ethereum.request({method: 'eth_requestAccounts'}) as string[];
+                if( accounts ) {
+                    setAccount(accounts[0]);
+                    setWeb3(new Web3(window.ethereum));
+                }                
+            } catch (error) {
+                console.error(error);
+            }
+        } else {
+            console.log("You need Metamask extension.")
+        }
+    }
+
+    /*
     // Metamask 지갑 연결 시, useEffect
     useEffect( ()=> {
         if(!provider) return;  // 메타마스크 지갑 연결 확인
         setWeb3(new Web3(provider));    //메타마스크 지갑 계정 정보로 Web3 인스턴스 생성
         console.log("set provider:", provider)
     }, [provider]);
+    */
+
+    // Metamask 커넥팅 시 SDK 말고, window.ethereum을 통해 접근
+    useEffect( () => {
+        connectMetamask();
+    }, []);
 
     // Web3 인스턴스 생성 시, useEffect
     useEffect( () => {
-        if(!web3) return;
-
-        setNFTContract( new web3.eth.Contract(mintNftAbi, MINT_NFT_CONTRACT));
-        setBoutiqueContract( new web3.eth.Contract(saleNftAbi, SALE_NFT_CONTRACT));
-        
-        console.log("set web3:", web3)
-
+        if(web3) {
+            setNFTContract( new web3.eth.Contract(mintNftAbi, MINT_NFT_CONTRACT));
+            setSALEContract( new web3.eth.Contract(saleNftAbi, SALE_NFT_CONTRACT));
+        }
     }, [web3]);
 
     // const { provider } = useSDK();
@@ -69,7 +90,7 @@ const GalleryLayout:FC = () => {
     return (
         <div>
             <Header account={account} setAccount={setAccount}/>
-            <Outlet context={ { account, web3, NFTContract, NFTBoutique } }/>
+            <Outlet context={ { account, web3, NFTContract, SALEContract } }/>
             <Footer />
         </div>
 
