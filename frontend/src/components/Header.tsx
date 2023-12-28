@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 // import { useSDK } from '@metamask/sdk-react';
 declare let ethereum: any;
 
-
 // interface: a way to define the shape of an object or a contract
 
 interface HeaderProps {
@@ -35,25 +34,31 @@ const Header = ({account, setAccount}: HeaderProps) => {
     };
 
     return (
-        <div className="mx-auto max-w-[1920px] flex flex-col justify-between items-left py-2">
-            <h1 className="text-xl font-bold">
-                Boutique of Modern Art
-            </h1>
-            <p>MetaMaskButton: </p>
-            {account ? (
-                <div>
-                    Connected: 
-                    <span>
-                        {account.substring(0, 7)}...
-                        {account.substring(account.length - 5)}
-                    </span>
-                    <button onClick={ ()=>setAccount("")}>Logout</button>
-                </div>                
-            ) : (
-                <button onClick={connectMetaMask}>Connect MetaMask</button>
-            )}              
-            <nav>
-                <ul className="flex space-x-4">
+        <div className="mx-auto max-w-[1920px] flex-col items-left py-2">
+            <div className="flex justify-between m-5">
+                <h1 className="text-4xl font-bold">
+                    Boutique of Modern Art
+                </h1>
+                <div className="text-green-500">
+                    <p className="text-xl font-bold">Metamask </p>
+                    {account ? (
+                        <div className="flex-col">
+                            <div>
+                                <span>
+                                    {account.substring(0, 7)}...
+                                    {account.substring(account.length - 5)}
+                                </span>                            
+                            </div>
+                            <button className="font-bold" onClick={ ()=>setAccount("")}>Logout</button>                
+                        </div>
+                        
+                    ) : (
+                        <button className="font-bold" onClick={connectMetaMask}>Connect Wallet</button>
+                    )}
+                </div>
+            </div>
+            <nav className="m-5">
+                <ul className="text-2xl font-bold flex space-x-8">
                 <li><Link to="/">Auditorium</Link></li>
                 <li><Link to="/art-and-artists">Art and artists</Link></li>
                 <li><Link to="/store">Store</Link></li>
