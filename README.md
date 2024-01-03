@@ -2,6 +2,7 @@
 
 React + Tailwindcss + ERC-20
 
+![Can't find main.png](/assets/main.png)
 ## 프로젝트 페이지 방문하기
 https://react-project-baehyoyoung-cmcm3glgq-hyoungbs-projects.vercel.app/
 
